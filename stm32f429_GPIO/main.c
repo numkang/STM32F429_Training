@@ -103,16 +103,18 @@ int main(void)
     while(1)
     {
 
-      if(PushButton_Read()){
+      //if(PushButton_Read()){
 
-        LED3_Toggle();
+        LED3_On();
+        //LED4_Off();
         Delay_1us(100000);
-      }else{
-
+        //LED4_On();
         LED3_Off();
-      }
-      
+        Delay_1us(100000);
+      /*}else{
 
+        LED3_Off();*/
+      //}
     }
 
     while(1); // Don't want to exit
