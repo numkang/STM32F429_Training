@@ -63,6 +63,13 @@ void LED3_Toggle(void){
 
 }
 
+void LED4_Toggle(void){
+
+
+  GPIOG->ODR ^= GPIO_Pin_14;
+
+}
+
 void USART1_Configuration(void)
 {
     USART_InitTypeDef USART_InitStructure;
@@ -106,11 +113,15 @@ int main(void)
     USART1_puts("Just for STM32F429I Discovery verify USART1 with USB TTL Cable\r\n");
     while(1)
     {
-        LED3_Toggle();
+        //LED3_Toggle();
 
-        if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) != RESET){
-
+        //Recieve
+        if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) != RESET){ // == SET
         char t = USART_ReceiveData(USART1);
+        if(t == 'a') LED3_Toggle();
+        else if(t == 'b') LED4_Toggle();
+
+        //Transmitt
         while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
         USART_SendData(USART1, t);
 

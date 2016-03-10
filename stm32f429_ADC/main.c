@@ -14,9 +14,11 @@ void RCC_Configuration(void)
 {
       /* --------------------------- System Clocks Configuration -----------------*/
       /* USART1 clock enable */
-      RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+      //RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
       /* GPIOA clock enable */
       RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+
+      /* heelloo i just added it */
 }
  
 /**************************************************************************************/
@@ -74,7 +76,7 @@ void ADC_Initialization(void)
   ADC_Init(ADC3, &ADC_InitStructure);
 
   /* ADC3 regular channel7 configuration *************************************/
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_6, 1, ADC_SampleTime_3Cycles);
+  ADC_RegularChannelConfig(ADC3, ADC_Channel_7, 1, ADC_SampleTime_3Cycles); //6
 
   /* Enable ADC3 */
   ADC_Cmd(ADC3, ENABLE);

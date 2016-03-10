@@ -1,6 +1,8 @@
 
 #include "main.h"
 
+//White - TX
+//Green - RX
 
 void RCC_Configuration(void)
 {
@@ -48,10 +50,41 @@ void LED_Initialization(void){
 
 }
 
+void LED3_On(void){
+
+  GPIO_SetBits(GPIOG,GPIO_Pin_13);
+
+}
+
+void LED3_Off(void){
+
+  GPIO_ResetBits(GPIOG,GPIO_Pin_13);
+
+}
+
 void LED3_Toggle(void){
 
+  //GPIOG->ODR ^= GPIO_Pin_13;
+  GPIO_ToggleBits(GPIOG,GPIO_Pin_13);
 
-  GPIOG->ODR ^= GPIO_Pin_13;
+}
+
+void LED4_On(void){
+
+  GPIO_SetBits(GPIOG,GPIO_Pin_14);
+
+}
+
+void LED4_Off(void){
+
+  GPIO_ResetBits(GPIOG,GPIO_Pin_14);
+
+}
+
+void LED4_Toggle(void){
+
+  //GPIOG->ODR ^= GPIO_Pin_13;
+  GPIO_ToggleBits(GPIOG,GPIO_Pin_14);
 
 }
 
@@ -74,11 +107,14 @@ void USART1_Configuration(void)
     USART_InitStructure.USART_Parity = USART_Parity_No;
     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    //START USART
     USART_Init(USART1, &USART_InitStructure);
     USART_Cmd(USART1, ENABLE);
 
+    //Using Interrupt
     USART_ClearFlag(USART1, USART_FLAG_TC);
 
+    //Enable RX interrupt & Disable TX interrupt
     USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 
@@ -111,26 +147,61 @@ int main(void)
     LED_Initialization();
     USART1_puts("Hello World!\r\n");
     USART1_puts("Just for STM32F429I Discovery verify USART1 with USB TTL Cable\r\n");
+
     while(1)
     {
-        LED3_Toggle();
+        //LED4_Toggle();
 
-        Delay_1us(10000);
-
-
+        //Delay_1us(10000);
+        //USART1_puts(i);        
     }
-
 }
 
 
 void USART1_IRQHandler(void)
-{
+{    
+  if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) { //==SET
+    uart1_data = USART_ReceiveData(USART1);      
   
-  if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
-    uart1_data = USART_ReceiveData(USART1);
-
-    USART_SendData(USART1, uart1_data);
-
+  if(i == '0'){
+    if (uart1_data =='a') i = uart1_data;
+    else if(uart1_data =='d') i = uart1_data;
+    else i = '0';
   }
+  else if(i == 'a'){
+    i = (uart1_data =='b') ? uart1_data : '0';
+  }
+  else if(i == 'b'){
+    i = (uart1_data =='c') ? uart1_data : '0';
+  }
+  else if(i == 'c'){
+    if (uart1_data =='3') i = uart1_data;
+    else if(uart1_data =='4') i = uart1_data;
+    else i = '0';
+  }
+  else if(i == '3'){
+    if(uart1_data =='o') LED3_On();
+    else if(uart1_data =='f') LED3_Off();
+    i = '0';
+  }
+  else if(i == '4'){
+    if(uart1_data =='o') LED4_On();
+    else if(uart1_data =='f') LED4_Off();
+    i = '0';
+  }
+  else if(i == 'd'){
+    i = (uart1_data =='e') ? uart1_data : '0';
+  }
+  else if(i == 'e'){
+    i = (uart1_data =='f') ? uart1_data : '0';
+  }
+  else if(i == 'f'){
+    if(uart1_data =='3') LED3_Toggle();
+    else if(uart1_data =='4') LED4_Toggle();
+    i = '0';
+  }
+
+  USART_SendData(USART1, i);
+}
 
 }

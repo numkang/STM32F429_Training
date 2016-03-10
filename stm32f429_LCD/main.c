@@ -45,59 +45,59 @@ int main(void)
 
   /* Clear the LCD */ 
   LCD_Clear(LCD_COLOR_WHITE);
-  LCD_SetFont(&Font16x24);
+  LCD_SetFont(&Font8x8);
 
-  LCD_SetLayer(LCD_BACKGROUND_LAYER);
-  LCD_SetColors(LCD_COLOR_BLACK,LCD_COLOR_WHITE);
+  //LCD_SetLayer(LCD_BACKGROUND_LAYER);
+  //LCD_SetColors(LCD_COLOR_BLACK,LCD_COLOR_WHITE);
 
-  LCD_DisplayStringLine(LINE(1), (uint8_t*)" LCD text print example ");
-  LCD_DisplayStringLine(LINE(2), (uint8_t*)" Ming6842 @ github");
+  //LCD_DisplayStringLine(LINE(1), (uint8_t*)" LCD text print example ");
+  //LCD_DisplayStringLine(LINE(2), (uint8_t*)" Ming6842 @ github");
 
-    LCD_SetLayer(LCD_FOREGROUND_LAYER);
+    //LCD_SetLayer(LCD_FOREGROUND_LAYER);
 
-    LCD_SetColors(LCD_COLOR_WHITE,LCD_COLOR_WHITE);
-    LCD_DrawFullRect(0,0,240,320);
+    //LCD_SetColors(LCD_COLOR_WHITE,LCD_COLOR_WHITE);
+    //LCD_DrawFullRect(0,0,240,320);
 
-    LCD_Clear(LCD_COLOR_WHITE);
+    //LCD_Clear(LCD_COLOR_WHITE);
 
-#define X_MIDDLE 120
-#define Y_MIDDLE 180
+//#define X_MIDDLE 120
+//#define Y_MIDDLE 180
 
-    LCD_SetTextColor(LCD_COLOR_BLACK);
-    LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75  , X_MIDDLE-75, Y_MIDDLE+75);
-    LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75-1, X_MIDDLE-75, Y_MIDDLE+75-1);
-    LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75+1, X_MIDDLE-75, Y_MIDDLE+75+1);
+    //LCD_SetTextColor(LCD_COLOR_BLACK);
+    // LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75  , X_MIDDLE-75, Y_MIDDLE+75);
+    // LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75-1, X_MIDDLE-75, Y_MIDDLE+75-1);
+    // LCD_DrawUniLine(X_MIDDLE+75, Y_MIDDLE-75+1, X_MIDDLE-75, Y_MIDDLE+75+1);
 
-    LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75  , X_MIDDLE+75, Y_MIDDLE+75);
-    LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75-1, X_MIDDLE+75, Y_MIDDLE+75-1);
-    LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75+1, X_MIDDLE+75, Y_MIDDLE+75+1);
-
-
-    LCD_DrawFullRect(X_MIDDLE-60,Y_MIDDLE-5,120,10);
-    LCD_DrawFullRect(X_MIDDLE-5,Y_MIDDLE-60,10,120);
+    // LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75  , X_MIDDLE+75, Y_MIDDLE+75);
+    // LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75-1, X_MIDDLE+75, Y_MIDDLE+75-1);
+    // LCD_DrawUniLine(X_MIDDLE-75, Y_MIDDLE-75+1, X_MIDDLE+75, Y_MIDDLE+75+1);
 
 
-    DrawThickCircle(X_MIDDLE,Y_MIDDLE,30,7);
+    // LCD_DrawFullRect(X_MIDDLE-60,Y_MIDDLE-5,120,10);
+    // LCD_DrawFullRect(X_MIDDLE-5,Y_MIDDLE-60,10,120);
 
-    DrawThickCircle(X_MIDDLE+60,Y_MIDDLE,22,   5);
-    DrawThickCircle(X_MIDDLE-60,Y_MIDDLE,22,   5);
-    DrawThickCircle(X_MIDDLE   ,Y_MIDDLE+60,22,5);
-    DrawThickCircle(X_MIDDLE   ,Y_MIDDLE-60,22,5);
 
-    DrawThickCircle(X_MIDDLE+75,Y_MIDDLE+75,32,5);
-    DrawThickCircle(X_MIDDLE-75,Y_MIDDLE-75,32,5);
-    DrawThickCircle(X_MIDDLE+75,Y_MIDDLE-75,32,5);
-    DrawThickCircle(X_MIDDLE-75,Y_MIDDLE+75,32,5);
+    // DrawThickCircle(X_MIDDLE,Y_MIDDLE,30,7);
 
-    LCD_SetColors(LCD_COLOR_BLACK,LCD_COLOR_WHITE-1);
+    // DrawThickCircle(X_MIDDLE+60,Y_MIDDLE,22,   5);
+    // DrawThickCircle(X_MIDDLE-60,Y_MIDDLE,22,   5);
+    // DrawThickCircle(X_MIDDLE   ,Y_MIDDLE+60,22,5);
+    // DrawThickCircle(X_MIDDLE   ,Y_MIDDLE-60,22,5);
 
-    LCD_DisplayStringLine(LINE(1), (uint8_t*)"     Ce-91     ");
+    // DrawThickCircle(X_MIDDLE+75,Y_MIDDLE+75,32,5);
+    // DrawThickCircle(X_MIDDLE-75,Y_MIDDLE-75,32,5);
+    // DrawThickCircle(X_MIDDLE+75,Y_MIDDLE-75,32,5);
+    // DrawThickCircle(X_MIDDLE-75,Y_MIDDLE+75,32,5);
 
-  LCD_SetLayer(LCD_BACKGROUND_LAYER);
+    //LCD_SetColors(LCD_COLOR_BLACK,LCD_COLOR_WHITE);
+
+    LCD_DisplayStringLine(LINE(1), (uint8_t*)"     Me My text     ");
+
+  //LCD_SetLayer(LCD_BACKGROUND_LAYER);
   while (1)
   {
 
-    if(colorR_dir){
+    /*if(colorR_dir){
 
           colorR += 1;
 
@@ -134,12 +134,12 @@ int main(void)
       colorB -= 3;
 
       if(colorB<25) colorB_dir=1;
-    }
+    }*/
 
-    LCD_SetColors(ASSEMBLE_RGB(colorR, colorG, colorB),LCD_COLOR_BLACK);
-    LCD_DrawFullRect(0,0,240,320);
+    //LCD_SetColors(ASSEMBLE_RGB(colorR, colorG, colorB),LCD_COLOR_BLACK);
+    //LCD_DrawFullRect(0,0,240,320);
 
-    Delay_1us(30000);
+    //Delay_1us(30000);
 
   }
   

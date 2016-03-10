@@ -6,12 +6,17 @@
  #include "stm32f4xx.h"
 
 uint8_t uart1_data;
-
+uint8_t i = '0';
 
 void RCC_Configuration(void);
 void GPIO_Configuration(void);
 void LED_Initialization(void);
+void LED3_On(void);
+void LED3_Off(void);
 void LED3_Toggle(void);
+void LED4_On(void);
+void LED4_Off(void);
+void LED4_Toggle(void);
 void USART1_Configuration(void);
 void USART1_puts(char* s);
 

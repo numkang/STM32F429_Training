@@ -148,7 +148,8 @@ int main(void)
 void TIM4_IRQHandler()
 {
         if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET){
-           LED4_Off();
+           LED3_Off();
+           //LED3_Toggle();
 
             TIM_Cmd(TIM4, DISABLE);
 
@@ -156,15 +157,15 @@ void TIM4_IRQHandler()
         }
 }
 
-uint16_t HighTime=20000; //control high time
+uint16_t HighTime=10000; //control high time
 uint8_t Direction=0;     // control direction of amplitude change
 void TIM5_IRQHandler()
 {
         if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET){
            
-           LED4_On();
+           LED3_On();
 
-           if(Direction == 0){
+           /*if(Direction == 0){
 
                  HighTime -= 100;
 
@@ -178,8 +179,7 @@ void TIM5_IRQHandler()
                   Direction =0;
                  }
 
-
-          }
+          }*/
 
            TIM_SetCounter(TIM4, HighTime);
             TIM_Cmd(TIM4, ENABLE);

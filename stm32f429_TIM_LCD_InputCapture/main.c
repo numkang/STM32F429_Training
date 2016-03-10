@@ -1,45 +1,12 @@
 #include "main.h"
-
-
 #include <stdint.h>
 
-void TIM5_IRQHandler(void);
-
-uint32_t timebaseCapture_prev = 0;
-uint32_t timebaseCapture_current =0;
-uint32_t timebaseCapture_output = 0;
-
-void TIM2_IRQHandler()
-{
-
-
-  if (TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET) {
-    /* Clear TIM2 Capture compare interrupt pending bit */
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
-
-      /* Get the Input Capture value */
-      timebaseCapture_prev = timebaseCapture_current;
-      timebaseCapture_current = TIM_GetCapture1(TIM2);
-
-      if(timebaseCapture_current > timebaseCapture_prev){
-
-        timebaseCapture_output  = (timebaseCapture_current- timebaseCapture_prev)*5/18;
-
-
-      }else{
-
-        timebaseCapture_output  =  (0xFFFF - timebaseCapture_prev + timebaseCapture_current)*5/18;
-      }
-      
-  }
-}
-
-
+TIM_ICInitTypeDef  TIM_ICInitStructure;
 void TIM2_Initialization(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
-  TIM_ICInitTypeDef  TIM_ICInitStructure;
+  //TIM_ICInitTypeDef  TIM_ICInitStructure;
   TIM_TimeBaseInitTypeDef TIM_TimeBaseStruct;
   /* TIM2 clock enable */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
@@ -66,8 +33,8 @@ void TIM2_Initialization(void)
   NVIC_Init(&NVIC_InitStructure);
 
   TIM_DeInit(TIM2);
-  TIM_TimeBaseStruct.TIM_Period = 0xFFFF;              
-  TIM_TimeBaseStruct.TIM_Prescaler = 50-1;          
+  TIM_TimeBaseStruct.TIM_Period = 20000;//0xFFFF;              
+  TIM_TimeBaseStruct.TIM_Prescaler = 90-1;//50-1;          
   TIM_TimeBaseStruct.TIM_ClockDivision = 0;
   TIM_TimeBaseStruct.TIM_CounterMode = TIM_CounterMode_Up;    // Counter Up
   TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStruct);
@@ -83,8 +50,7 @@ void TIM2_Initialization(void)
   /* TIM enable counter */
   TIM_Cmd(TIM2, ENABLE);
   /* Enable the CC1 Interrupt Request */
-  TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
-  
+  TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);  
 }
 
 
@@ -94,6 +60,42 @@ static inline void Delay_1us(uint32_t nCnt_1us)
 
   for (; nCnt_1us != 0; nCnt_1us--)
     for (nCnt = 13; nCnt != 0; nCnt--);
+}
+
+uint32_t timebaseCapture_prev = 0;
+uint32_t timebaseCapture_current =0;
+uint32_t timebaseCapture_output = 0;
+void TIM2_IRQHandler()
+{
+  if (TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET) {
+    /* Clear TIM2 Capture compare interrupt pending bit */
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+
+      /* Get the Input Capture value */
+    timebaseCapture_prev = timebaseCapture_current;
+    timebaseCapture_current = TIM_GetCapture1(TIM2);
+
+    if(TIM_ICInitStructure.TIM_ICPolarity == TIM_ICPolarity_Rising){
+
+      TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+      TIM_ICInit(TIM2, &TIM_ICInitStructure);
+
+    }
+    else if(TIM_ICInitStructure.TIM_ICPolarity == TIM_ICPolarity_Falling){
+
+      TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+      TIM_ICInit(TIM2, &TIM_ICInitStructure);
+
+      if(timebaseCapture_current > timebaseCapture_prev){
+
+        timebaseCapture_output = (timebaseCapture_current - timebaseCapture_prev);//*5/18;
+
+      }
+      else{
+        timebaseCapture_output  = (20000 - timebaseCapture_prev + timebaseCapture_current);//*5/18;
+      }
+    }      
+  }
 }
 
 
@@ -116,14 +118,13 @@ int main(void)
 
     TIM2_Initialization();
 
-    terminalWrite("Welcome to our termainal .\n");     Delay_1us(100000);
+    terminalWrite("Welcome to our termainal .\n");     Delay_1us(1000000);
   while (1){
 
 
-     sprintf(lcd_text_main,"\nPeriod = %ldus",timebaseCapture_output);
+     sprintf(lcd_text_main,"\nPeriod = %ld us",timebaseCapture_output);
      terminalWrite(lcd_text_main); 
      Delay_1us(10000);
-  }
-  
+  }  
 }
 
