@@ -5,7 +5,7 @@
 #include "LED.h"
 #include "main.h"
 
-void USART3_Initialization(void);
-void USART3_puts(char* s);
+void USART1_Initialization(void);
+void USART1_puts(char* s);
 
 #endif
