@@ -67,10 +67,7 @@ void SPI_Initialization(void){
 }
 
 int main(void)
-{
-
-  
-  
+{  
     lcd_init();
     lcd_drawBackground(20,60,250);
     lcd_drawBGPersimmon(20, 60, 250);
