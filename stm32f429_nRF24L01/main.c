@@ -66,29 +66,29 @@ void TIM2_IRQHandler()
 
 
 int main(void)
-{
-  
+{  
     RCC_Configuration();
     LED_Initialization();     //PG13 (GREEN) & PG14 (RED)
     USART1_Initialization();  //PA9 (TX) & PA10 (RX)
     SPI1_Initialization();    //PB3 (SCK) & PB4 (MISO) & PB5 (MOSI)
     Delay_1us(1000000);
-    NRF2401_Initialization();
+    NRF24L01_Initialization();
     Timer2_Initialization();
 
-    // LED3_On();
+    LED3_On();
     USART1_puts("\r\nHello World\r\n");
-    // Delay_1us(500000);
-    // LED3_Off();
-    // Delay_1us(500000);    
+    Delay_1us(500000);
+    LED3_Off();
+    Delay_1us(500000);    
 
     while(1)
     {
       if(task == 1){
         LED4_Toggle();
 
-        /* NRF2401 TX Mode */
-        // NRF2401_SendData_1CH("*");
+        /* NRF24L01 TX Mode */
+        // NRF24L01_SendData("3");
+        // NRF24L01_R_REG(NRF24L01_CONFIG);
 
         /* NRF2401 RX Mode */
         // uint8_t i;
@@ -98,7 +98,8 @@ int main(void)
         // }
         // USART1_puts("\r\n");
 
-        NRF2401_ReceiveData_1CH();
+        NRF24L01_ReceiveData();
+        // NRF24L01_R_ADDR(NRF24L01_TX_ADDR);
         task = 0;
       }
     }

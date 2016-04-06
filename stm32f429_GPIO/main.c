@@ -106,9 +106,9 @@ int main(void)
       //if(PushButton_Read()){
 
         LED3_On();
-        //LED4_Off();
+        LED4_Off();
         Delay_1us(100000);
-        //LED4_On();
+        LED4_On();
         LED3_Off();
         Delay_1us(100000);
       /*}else{

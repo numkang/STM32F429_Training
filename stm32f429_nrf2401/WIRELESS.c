@@ -34,6 +34,9 @@ void SPI1_Initialization(void){
 
 	  /* Enable SPI1  */
   	SPI_Cmd(SPI1, ENABLE);
+
+
+
 }
 
 void NRF2401_Initialization(void){
@@ -81,8 +84,8 @@ void NRF2401_Initialization(void){
     NRF2401_InitStructure.NRF2401_Output_Power = NRF2401_RF_PWR_MINUS_0_DB;
     NRF2401_InitStructure.NRF2401_RF_CH = NRF2401_RF_CH_DEFAULT;
 
-    NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_TX_MODE;
-    // NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_RX_MODE;
+    // NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_TX_MODE;
+    NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_RX_MODE;
 
     NRF2401_InitStructure.NRF2401_SPIx = SPI1;
     NRF2401_InitStructure.NRF2401_CE_GPIOx = GPIOD;
@@ -93,4 +96,14 @@ void NRF2401_Initialization(void){
     NRF2401_InitStructure.NRF2401_PWR_GPIO_PinSource = GPIO_Pin_5;
 
     NRF2401_Init(&NRF2401_InitStructure);
+
+    if(NRF2401_InitStructure.NRF2401_Active_Mode == NRF2401_RX_MODE){
+      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+      GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+      GPIO_Init(GPIOB, &GPIO_InitStructure);
+    }
+
+    
 }
