@@ -42,7 +42,7 @@ void Timer2_Initialization(void)
   /* -- Timer Configuration --------------------------------------------------- */
   TIM_DeInit(TIM2);
   TIM_TimeBaseInitTypeDef TIM_TimeBaseStruct;
-  TIM_TimeBaseStruct.TIM_Period = 2500;  //250ms  --> 4Hz
+  TIM_TimeBaseStruct.TIM_Period = 25000;  //250ms  --> 4Hz
   TIM_TimeBaseStruct.TIM_Prescaler = 90 - 1; // Prescaled by 900 -> = 0.1M(10us)
   TIM_TimeBaseStruct.TIM_ClockDivision = TIM_CKD_DIV1; // Div by one -> 90 MHz (Now RCC_DCKCFGR_TIMPRE is configured to divide clock by two)
   TIM_TimeBaseStruct.TIM_CounterMode = TIM_CounterMode_Up;
@@ -79,7 +79,9 @@ int main(void)
     USART1_puts("\r\nHello World\r\n");
     Delay_1us(500000);
     LED3_Off();
-    Delay_1us(500000);    
+    Delay_1us(500000);   
+
+    char* data = "333"; 
 
     while(1)
     {
@@ -87,19 +89,19 @@ int main(void)
         LED4_Toggle();
 
         /* NRF24L01 TX Mode */
-        // NRF24L01_SendData("3");
+        NRF24L01_SendData(data);        
+
+        /* NRF24L01 RX Mode */
+        // NRF24L01_ReceiveData();        
+
+        /* NRF24L01 Read Register */
         // NRF24L01_R_REG(NRF24L01_CONFIG);
+        // NRF24L01_R_ADDR(NRF24L01_TX_ADDR);        
 
-        /* NRF2401 RX Mode */
-        // uint8_t i;
-        // for(i = 0; i < 24; i++){
-        //   receivedData = NRF2401_ReceiveData_1CH()[i];
-        //   USART_SendData(USART1, receivedData);
-        // }
-        // USART1_puts("\r\n");
+        /* NRF24L01 change the sending data to check if MCU freeze */
+        if(data == "333") data = "???";
+        else if(data == "???") data = "333";
 
-        NRF24L01_ReceiveData();
-        // NRF24L01_R_ADDR(NRF24L01_TX_ADDR);
         task = 0;
       }
     }

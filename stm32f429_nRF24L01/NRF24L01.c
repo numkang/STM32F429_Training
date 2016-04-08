@@ -16,7 +16,7 @@ void Delay_us(uint32_t nCnt_1us){
 }
 
 void NRF24L01_W_REG(uint8_t REG, uint8_t DAT){
-	uint8_t buff;
+	uint8_t status, buff;
 
 	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
 
@@ -24,7 +24,7 @@ void NRF24L01_W_REG(uint8_t REG, uint8_t DAT){
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-	buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
 	SPI_I2S_SendData(NRF24L01_Init_SPIx, DAT);
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
@@ -33,7 +33,7 @@ void NRF24L01_W_REG(uint8_t REG, uint8_t DAT){
 	buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
 	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
-	Delay_us(100);
+	Delay_us(10);
 }
 
 void NRF24L01_R_REG(uint8_t REG){
@@ -62,7 +62,7 @@ void NRF24L01_R_REG(uint8_t REG){
 }
 
 void NRF24L01_W_ADDR(uint8_t REG, char *DAT){
-	uint8_t buff, i;
+	uint8_t status, buff, i;
 
 	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
 
@@ -70,10 +70,10 @@ void NRF24L01_W_ADDR(uint8_t REG, char *DAT){
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-	buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
 	for(i = 0; i < NRF24L01_Init_ADDR_Width; i++){
-		SPI_I2S_SendData(NRF24L01_Init_SPIx, 0x33);
+		SPI_I2S_SendData(NRF24L01_Init_SPIx, DAT[NRF24L01_Init_ADDR_Width - 1 - i]);
 		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
@@ -81,7 +81,7 @@ void NRF24L01_W_ADDR(uint8_t REG, char *DAT){
 	}
 
 	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
-	Delay_us(100);
+	Delay_us(10);
 }
 
 void NRF24L01_R_ADDR(uint8_t REG){
@@ -101,7 +101,7 @@ void NRF24L01_R_ADDR(uint8_t REG){
 		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-		addr[i] = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+		addr[NRF24L01_Init_ADDR_Width - 1 - i] = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 	}
 
 	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
@@ -124,8 +124,7 @@ void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 	NRF24L01_Init_DataSize = NRF24L01_InitStruct->NRF24L01_DataSize_P0;
 	NRF24L01_Init_ADDR_P0 = NRF24L01_InitStruct->NRF24L01_ADDR_P0;
 
-	// data = NRF24L01_CONFIG_RESET_VALUE | NRF24L01_InitStruct->NRF24L01_CRC_Length | NRF24L01_InitStruct->NRF24L01_PWR | NRF24L01_InitStruct->NRF24L01_Mode;
-	data = 0x7E | NRF24L01_InitStruct->NRF24L01_Mode;
+	data = NRF24L01_CONFIG_RESET_VALUE | NRF24L01_InitStruct->NRF24L01_CRC_Length | NRF24L01_InitStruct->NRF24L01_PWR | NRF24L01_InitStruct->NRF24L01_Mode;
 	NRF24L01_W_REG(NRF24L01_CONFIG, data);
 
 	data = 0x00; //Turn Off ACK
@@ -148,7 +147,7 @@ void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 }
 
 void NRF24L01_SendData(uint8_t* Data){
-	uint8_t buff, i, j;
+	uint8_t status, buff, i;
 
 	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
 
@@ -156,7 +155,7 @@ void NRF24L01_SendData(uint8_t* Data){
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-	j = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
 	for(i = 0; i < NRF24L01_Init_DataSize; i++){
 		SPI_I2S_SendData(NRF24L01_Init_SPIx, Data[NRF24L01_Init_DataSize - 1 - i]);
@@ -172,22 +171,23 @@ void NRF24L01_SendData(uint8_t* Data){
 	Delay_us(10);
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 
-	// sprintf(text_main,"%d ", j);
+	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+
+	// sprintf(text_main,"%d ", buff);
 	// USART1_puts(text_main);
 }
 
 uint8_t* NRF24L01_ReceiveData(void){
 	uint8_t NRF2401_RX_Word[NRF24L01_Init_DataSize];
-	uint8_t i, buff;
+	uint8_t status, i;
 
 	GPIO_SetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
-	// Delay_us(130);
 
-	// while(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 1){
-		// LED3_On();
-	// }
+	while(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 1){
+		LED3_On();
+	}
 
-	// LED3_Off();
+	LED3_Off();
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 
 	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
@@ -196,21 +196,23 @@ uint8_t* NRF24L01_ReceiveData(void){
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-	buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
 	for(i = 0; i < NRF24L01_Init_DataSize; i++){
 		SPI_I2S_SendData(NRF24L01_Init_SPIx, 0x00);
 	 	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
 
 		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
-	  	NRF2401_RX_Word[i] = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	  	NRF2401_RX_Word[NRF24L01_Init_DataSize - 1 - i] = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
 
-		sprintf(text_main,"%d,%d,%d ", buff, NRF2401_RX_Word[i], i);
-		USART1_puts(text_main);
+		// sprintf(text_main,"%d,%d,%d ", status, NRF2401_RX_Word[i], i);
+		// USART1_puts(text_main);
 	}
 
 	Delay_us(10);
 	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
 	return NRF2401_RX_Word;
 }

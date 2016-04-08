@@ -118,7 +118,6 @@ typedef struct
 #define NRF24L01_RX_ADDR_P5_DEFAULT                   ((uint8_t)0xC6)
 #define NRF24L01_TX_ADDR_DEFAULT                      ((uint64_t)0xE7E7E7E7E7)
 
-
 /** @defgroup NRF24L01_Data_Length (1-32)
 * @{
 */
@@ -168,7 +167,7 @@ typedef struct
 #define NRF24L01_SETUP_AW_RESET_VALUE                 ((uint8_t)0x03) //0000 0011
 #define NRF24L01_SETUP_RETR_RESET_VALUE               ((uint8_t)0x03) //0000 0011
 #define NRF24L01_RF_CH_RESET_VALUE                    ((uint8_t)0x02) //0000 0010
-#define NRF24L01_RF_SETUP_RESET_VALUE                 ((uint8_t)0x0F) //0000 1111
+#define NRF24L01_RF_SETUP_RESET_VALUE                 ((uint8_t)0x07) //0000 0111
 #define NRF24L01_STATUS_RESET_VALUE                   ((uint8_t)0x0E) //0000 1110
 #define NRF24L01_OBSERVE_TX_RESET_VALUE               ((uint8_t)0x00) //0000 0000
 #define NRF24L01_CD_RESET_VALUE                       ((uint8_t)0x00) //0000 0000
@@ -183,40 +182,7 @@ void NRF24L01_W_ADDR(uint8_t REG, char *DAT);
 void NRF24L01_R_ADDR(uint8_t REG);
 void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct);
 
-
-/* Initialization and Configuration functions *********************************/
-
-// void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct);
-// void SPI_StructInit(SPI_InitTypeDef* SPI_InitStruct);
-// void I2S_StructInit(I2S_InitTypeDef* I2S_InitStruct);
-// void SPI_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState);
-// void I2S_Cmd(SPI_TypeDef* SPIx, FunctionalState NewState);
-// void SPI_DataSizeConfig(SPI_TypeDef* SPIx, uint16_t SPI_DataSize);
-// void SPI_BiDirectionalLineConfig(SPI_TypeDef* SPIx, uint16_t SPI_Direction);
-// void SPI_NSSInternalSoftwareConfig(SPI_TypeDef* SPIx, uint16_t SPI_NSSInternalSoft);
-// void SPI_SSOutputCmd(SPI_TypeDef* SPIx, FunctionalState NewState);
-// void SPI_TIModeCmd(SPI_TypeDef* SPIx, FunctionalState NewState);
-
-// void I2S_FullDuplexConfig(SPI_TypeDef* I2Sxext, I2S_InitTypeDef* I2S_InitStruct);
-
-// /* Data transfers functions ***************************************************/ 
 void NRF24L01_SendData(uint8_t* Data);
 uint8_t* NRF24L01_ReceiveData(void);
-
-// /* Hardware CRC Calculation functions *****************************************/
-// void SPI_CalculateCRC(SPI_TypeDef* SPIx, FunctionalState NewState);
-// void SPI_TransmitCRC(SPI_TypeDef* SPIx);
-// uint16_t SPI_GetCRC(SPI_TypeDef* SPIx, uint8_t SPI_CRC);
-// uint16_t SPI_GetCRCPolynomial(SPI_TypeDef* SPIx);
-
-// /* DMA transfers management functions *****************************************/
-// void SPI_I2S_DMACmd(SPI_TypeDef* SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState NewState);
-
-// /* Interrupts and flags management functions **********************************/
-// void SPI_I2S_ITConfig(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT, FunctionalState NewState);
-// FlagStatus SPI_I2S_GetFlagStatus(SPI_TypeDef* SPIx, uint16_t SPI_I2S_FLAG);
-// void SPI_I2S_ClearFlag(SPI_TypeDef* SPIx, uint16_t SPI_I2S_FLAG);
-// ITStatus SPI_I2S_GetITStatus(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT);
-// void SPI_I2S_ClearITPendingBit(SPI_TypeDef* SPIx, uint8_t SPI_I2S_IT);
 
 #endif /* __NRF2401_H */
