@@ -63,8 +63,9 @@ static inline void Delay_1us(uint32_t nCnt_1us)
 }
 
 uint32_t timebaseCapture_prev = 0;
-uint32_t timebaseCapture_current =0;
+uint32_t timebaseCapture_current = 0;
 uint32_t timebaseCapture_output = 0;
+
 void TIM2_IRQHandler()
 {
   if (TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET) {

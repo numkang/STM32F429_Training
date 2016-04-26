@@ -49,7 +49,7 @@ void NRF24L01_Initialization(void){
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOD, &GPIO_InitStructure);
 
-    /*-------------- IQR (PE2)Pin Configuration for RX Mode ------------*/
+    /*------------- IQR (PE2) Pin Configuration for RX Mode ------------*/
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);    
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
@@ -64,8 +64,8 @@ void NRF24L01_Initialization(void){
     NRF24L01_InitStructure.NRF24L01_CRC_Length = NRF24L01_CRC_LENGTH_2_BYTES;
     NRF24L01_InitStructure.NRF24L01_PWR = NRF24L01_PWR_UP;
 
-    NRF24L01_InitStructure.NRF24L01_Mode = NRF24L01_PTX_MODE;
-    // NRF24L01_InitStructure.NRF24L01_Mode = NRF24L01_PRX_MODE;
+    // NRF24L01_InitStructure.NRF24L01_Mode = NRF24L01_PTX_MODE;
+    NRF24L01_InitStructure.NRF24L01_Mode = NRF24L01_PRX_MODE;
 
     NRF24L01_InitStructure.NRF24L01_ADDR_Width = NRF24L01_ADDR_W_4_BYTE;
     NRF24L01_InitStructure.NRF24L01_RF_CH = NRF24L01_RF_CH_DEFAULT;

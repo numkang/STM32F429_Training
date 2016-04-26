@@ -128,9 +128,16 @@ typedef struct
 
 #define NRF24L01_R_REGISTER                           ((uint8_t)0x00) //0000 0000
 #define NRF24L01_W_REGISTER                           ((uint8_t)0x20) //0010 0000
-
 #define NRF24L01_R_RX_PAYLOAD                         ((uint8_t)0x61) //0110 0001
 #define NRF24L01_W_TX_PAYLOAD                         ((uint8_t)0xA0) //1010 0000
+#define NRF24L01_FLUSH_TX                             ((uint8_t)0xE1) //1110 0001
+#define NRF24L01_FLUSH_RX                             ((uint8_t)0xE2) //1110 0010
+#define NRF24L01_REUSE_TX_PL                          ((uint8_t)0xE3) //1110 0011
+#define NRF24L01_ACTIVATE                             ((uint8_t)0x50) //0101 0000
+#define NRF24L01_R_RX_PL_WID                          ((uint8_t)0x60) //0110 0000
+#define NRF24L01_W_ACK_PAYLOAD                        ((uint8_t)0xA8) //1010 1000
+#define NRF24L01_W_TX_PAYLOAD_NOACK                   ((uint8_t)0xB0) //1011 0000
+#define NRF24L01_NOP                                  ((uint8_t)0xFF) //1111 1111
 
 /** -------------------------- Register Address ------------------------- **/
 
@@ -181,6 +188,9 @@ void NRF24L01_R_REG(uint8_t REG);
 void NRF24L01_W_ADDR(uint8_t REG, char *DAT);
 void NRF24L01_R_ADDR(uint8_t REG);
 void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct);
+void NRF24L01_ACTIVATE_FUNC();
+void NRF24L01_SendData_NOACK(uint8_t* Data);
+void NRF24L01_SendData_ACK(uint8_t* Data);
 
 void NRF24L01_SendData(uint8_t* Data);
 uint8_t* NRF24L01_ReceiveData(void);

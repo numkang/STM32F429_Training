@@ -134,6 +134,7 @@ void EXTILineA0_Config(void)
 /**************************************************************************************/
 
 uint8_t buff_transmit[100];
+
 int main(void)
 {
     RCC_Configuration();
@@ -141,9 +142,7 @@ int main(void)
     USART1_Configuration();
     LED_Initialization();
 
-    int i=0;
     USART1_puts("Hello World!\r\n");
-    USART1_puts("Just for STM32F429I Discovery verify USART1 with USB TTL Cable\r\n");
     
     EXTILineA0_Config();
     /* Generate software interrupt: simulate a falling edge applied on EXTI0 line */
@@ -151,17 +150,7 @@ int main(void)
 
     while(1)
     {
-        //LED3_Toggle();
-
-        sprintf((char *)buff_transmit, "haha\r\n");
-          USART1_puts((char *)buff_transmit);
-
-          for (i=0;i<50;i++){
-
-            buff_transmit[i]=0;
-          }
-          
-        Delay_1us(100000);
+        //This loop does nothing but smiline at you
     }
 
     while(1); // Don't want to exit
@@ -179,3 +168,19 @@ void EXTI0_IRQHandler(void)
     EXTI_ClearITPendingBit(EXTI_Line0);
   }
 }
+
+
+
+    // int i=0;
+
+// //LED3_Toggle();
+
+//         sprintf((char *)buff_transmit, "haha\r\n");
+//           USART1_puts((char *)buff_transmit);
+
+//           for (i=0;i<50;i++){
+
+//             buff_transmit[i]=0;
+//           }
+          
+//         Delay_1us(100000);

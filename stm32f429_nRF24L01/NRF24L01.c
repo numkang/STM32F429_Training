@@ -110,6 +110,27 @@ void NRF24L01_R_ADDR(uint8_t REG){
 	USART1_puts(text_main);
 }
 
+void NRF24L01_ACTIVATE_FUNC(){
+	uint8_t status, buff;
+
+	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	SPI_I2S_SendData(NRF24L01_Init_SPIx, NRF24L01_ACTIVATE);
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+
+	SPI_I2S_SendData(NRF24L01_Init_SPIx, 0x73);
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+	buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+
+	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+	Delay_us(10);
+}
+
 void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 	uint8_t data;
 
@@ -127,8 +148,8 @@ void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 	data = NRF24L01_CONFIG_RESET_VALUE | NRF24L01_InitStruct->NRF24L01_CRC_Length | NRF24L01_InitStruct->NRF24L01_PWR | NRF24L01_InitStruct->NRF24L01_Mode;
 	NRF24L01_W_REG(NRF24L01_CONFIG, data);
 
-	data = 0x00; //Turn Off ACK
-	NRF24L01_W_REG(NRF24L01_EN_AA, data);
+	// data = 0x00; //Turn Off ACK
+	// NRF24L01_W_REG(NRF24L01_EN_AA, data);
 
 	data = NRF24L01_InitStruct->NRF24L01_ADDR_Width;
 	NRF24L01_W_REG(NRF24L01_SETUP_AW, data);
@@ -141,6 +162,8 @@ void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 
 	data = NRF24L01_InitStruct->NRF24L01_DataSize_P0;
 	NRF24L01_W_REG(NRF24L01_RX_PW_P0, data);
+
+	NRF24L01_ACTIVATE_FUNC();
 
 	NRF24L01_W_ADDR(NRF24L01_RX_ADDR_P0, NRF24L01_Init_ADDR_P0);
 	NRF24L01_W_ADDR(NRF24L01_TX_ADDR, NRF24L01_Init_ADDR_P0);
@@ -170,6 +193,10 @@ void NRF24L01_SendData(uint8_t* Data){
 	GPIO_SetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 	Delay_us(10);
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
+
+	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// }
 
 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
@@ -212,7 +239,81 @@ uint8_t* NRF24L01_ReceiveData(void){
 	Delay_us(10);
 	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
 
+	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// }
+
 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
 	return NRF2401_RX_Word;
+}
+
+void NRF24L01_SendData_ACK(uint8_t* Data){
+	uint8_t status, buff, i;
+
+	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	SPI_I2S_SendData(NRF24L01_Init_SPIx, NRF24L01_W_ACK_PAYLOAD); //data pipe 0
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+
+	for(i = 0; i < NRF24L01_Init_DataSize; i++){
+		SPI_I2S_SendData(NRF24L01_Init_SPIx, Data[NRF24L01_Init_DataSize - 1 - i]);
+		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+		buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	}
+
+	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	GPIO_SetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
+	Delay_us(10);
+	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
+
+	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// }
+
+	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+
+	// sprintf(text_main,"%d ", buff);
+	// USART1_puts(text_main);
+}
+
+void NRF24L01_SendData_NOACK(uint8_t* Data){
+	uint8_t status, buff, i;
+
+	GPIO_ResetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	SPI_I2S_SendData(NRF24L01_Init_SPIx, NRF24L01_W_TX_PAYLOAD_NOACK);
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+	while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+	status = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+
+	for(i = 0; i < NRF24L01_Init_DataSize; i++){
+		SPI_I2S_SendData(NRF24L01_Init_SPIx, Data[NRF24L01_Init_DataSize - 1 - i]);
+		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_I2S_FLAG_TXE) == RESET);
+
+		while (SPI_I2S_GetFlagStatus(NRF24L01_Init_SPIx, SPI_FLAG_RXNE) == RESET);
+		buff = SPI_I2S_ReceiveData(NRF24L01_Init_SPIx);
+	}
+
+	GPIO_SetBits(NRF24L01_Init_CSN_GPIOx, NRF24L01_Init_CSN_GPIO_PinSource);
+
+	GPIO_SetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
+	Delay_us(10);
+	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
+
+	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// }
+
+	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+
+	// sprintf(text_main,"%d ", buff);
+	// USART1_puts(text_main);
 }
