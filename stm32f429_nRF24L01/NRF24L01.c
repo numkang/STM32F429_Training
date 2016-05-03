@@ -148,8 +148,7 @@ void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct){
 	data = NRF24L01_CONFIG_RESET_VALUE | NRF24L01_InitStruct->NRF24L01_CRC_Length | NRF24L01_InitStruct->NRF24L01_PWR | NRF24L01_InitStruct->NRF24L01_Mode;
 	NRF24L01_W_REG(NRF24L01_CONFIG, data);
 
-	// data = 0x00; //Turn Off ACK
-	// NRF24L01_W_REG(NRF24L01_EN_AA, data);
+	// NRF24L01_W_REG(NRF24L01_EN_AA, 0x00); //Turn Off ACK
 
 	data = NRF24L01_InitStruct->NRF24L01_ADDR_Width;
 	NRF24L01_W_REG(NRF24L01_SETUP_AW, data);
@@ -194,11 +193,11 @@ void NRF24L01_SendData(uint8_t* Data){
 	Delay_us(10);
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 
-	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
-	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
-	// }
+	if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+		NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	}
 
-	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
 	// sprintf(text_main,"%d ", buff);
 	// USART1_puts(text_main);
@@ -273,11 +272,11 @@ void NRF24L01_SendData_ACK(uint8_t* Data){
 	Delay_us(10);
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 
-	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
-	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
-	// }
+	if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+		NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	}
 
-	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
 	// sprintf(text_main,"%d ", buff);
 	// USART1_puts(text_main);
@@ -308,11 +307,11 @@ void NRF24L01_SendData_NOACK(uint8_t* Data){
 	Delay_us(10);
 	GPIO_ResetBits(NRF24L01_Init_CE_GPIOx, NRF24L01_Init_CE_GPIO_PinSource);
 
-	// if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
-	// 	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
-	// }
+	if(GPIO_ReadInputDataBit(NRF24L01_Init_IQR_GPIOx, NRF24L01_Init_IQR_GPIO_PinSource) == 0){
+		NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	}
 
-	NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
+	// NRF24L01_W_REG(NRF24L01_STATUS, NRF24L01_STATUS_Clear_Bits);
 
 	// sprintf(text_main,"%d ", buff);
 	// USART1_puts(text_main);

@@ -81,7 +81,7 @@ int main(void)
     LED3_Off();
     Delay_1us(500000);   
 
-    char* data = "123"; 
+    char* data = "333";
 
     while(1)
     {
@@ -89,19 +89,19 @@ int main(void)
         LED4_Toggle();
 
         /* NRF24L01 TX Mode */
-        // NRF24L01_SendData(data); 
+        NRF24L01_SendData(data); 
         // NRF24L01_SendData_NOACK(data);       
 
         /* NRF24L01 RX Mode */
-        NRF24L01_ReceiveData();        
+        // NRF24L01_ReceiveData();        
 
         /* NRF24L01 Read Register */
         // NRF24L01_R_REG(NRF24L01_CONFIG);
         // NRF24L01_R_ADDR(NRF24L01_TX_ADDR);        
 
         /* NRF24L01 change the sending data to check if MCU freeze */
-        if(data == "123") data = "45?";
-        else if(data == "45?") data = "123";
+        if(data == "333") data = "???";
+        else if(data == "???") data = "333";
 
         task = 0;
       }

@@ -84,8 +84,8 @@ void NRF2401_Initialization(void){
     NRF2401_InitStructure.NRF2401_Output_Power = NRF2401_RF_PWR_MINUS_0_DB;
     NRF2401_InitStructure.NRF2401_RF_CH = NRF2401_RF_CH_DEFAULT;
 
-    // NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_TX_MODE;
-    NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_RX_MODE;
+    NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_TX_MODE;
+    // NRF2401_InitStructure.NRF2401_Active_Mode = NRF2401_RX_MODE;
 
     NRF2401_InitStructure.NRF2401_SPIx = SPI1;
     NRF2401_InitStructure.NRF2401_CE_GPIOx = GPIOD;

@@ -88,7 +88,7 @@ int main(void)
         LED4_Toggle();
 
         /* NRF2401 TX Mode */
-        // NRF2401_SendData_1CH("*");
+        NRF2401_SendData_1CH("KU");
 
         /* NRF2401 RX Mode */
         // uint8_t i;
@@ -98,7 +98,7 @@ int main(void)
         // }
         // USART1_puts("\r\n");
 
-        NRF2401_ReceiveData_1CH();
+        // NRF2401_ReceiveData_1CH();
         task = 0;
       }
     }
