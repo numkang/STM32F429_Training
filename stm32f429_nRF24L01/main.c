@@ -89,13 +89,15 @@ int main(void)
         LED4_Toggle();
 
         /* NRF24L01 TX Mode */
-        NRF24L01_SendData(data); 
-        // NRF24L01_SendData_NOACK(data);       
+        // NRF24L01_SendData(data); //for non-duplex mode
+        // NRF24L01_SendData_NOACK(data); //for duplex mode but no ACK
+        // NRF24L01_SendData_ACK(data); //for duplex mode
 
         /* NRF24L01 RX Mode */
-        // NRF24L01_ReceiveData();        
+        // NRF24L01_ReceiveData(); //for non-duplex mode
+        NRF24L01_ReceiveData_ACK(data); //for duplex mode    
 
-        /* NRF24L01 Read Register */
+        /* NRF24L01 Read Register and Address*/
         // NRF24L01_R_REG(NRF24L01_CONFIG);
         // NRF24L01_R_ADDR(NRF24L01_TX_ADDR);        
 

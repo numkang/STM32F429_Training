@@ -106,6 +106,12 @@ typedef struct
 
 #define NRF24L01_STATUS_Clear_Bits                    ((uint8_t)0x70) //0111 0000
 
+/** @defgroup NRF24L01_FEATURE_ENABLE
+* @{
+*/
+
+#define NRF24L01_FEATURE_ENABLE                       ((uint8_t)0x07) //0000 0111
+
 /** @defgroup NRF24L01_ADDR_Data_Pipe
 * @{
 */
@@ -189,10 +195,15 @@ void NRF24L01_W_ADDR(uint8_t REG, char *DAT);
 void NRF24L01_R_ADDR(uint8_t REG);
 void NRF24L01_Init(NRF24L01_InitTypeDef* NRF24L01_InitStruct);
 void NRF24L01_ACTIVATE_FUNC();
-void NRF24L01_SendData_NOACK(uint8_t* Data);
-void NRF24L01_SendData_ACK(uint8_t* Data);
 
 void NRF24L01_SendData(uint8_t* Data);
 uint8_t* NRF24L01_ReceiveData(void);
+
+// void NRF24L01_SendData_ACK(uint8_t* Data);
+
+void NRF24L01_SendData_NOACK(uint8_t* Data);
+uint8_t* NRF24L01_SendData_ACK(uint8_t* Data);
+uint8_t* NRF24L01_ReceiveData_ACK(uint8_t* Data_ACK);
+
 
 #endif /* __NRF2401_H */
